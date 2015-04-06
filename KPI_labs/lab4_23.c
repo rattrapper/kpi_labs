@@ -1,20 +1,19 @@
 #include <time.h>
 #include <stdio.h>
 #include <malloc.h>
+#include <ctype.h>
 
-int pown(int el, int power);
+pown(int, unsigned int);
 max(int, int);
 min(int, int);
 void print(int **, int);
-int *readVector(int);
+*readVector();
 
 main()
 {
 	int **matrix, *seq;
-	int n, line, i, j, k = 0;
-	printf("enter n: ");
-	scanf("%d", &n);
-	seq = readVector(n);
+	int n, line, i, k = 0;
+	seq = readVector(&n);
 	matrix = (int**)malloc(sizeof(int*)*n);
 	for (i = 0; i < n; i++)
 		matrix[i] = (int*)malloc(sizeof(int) * n);
@@ -26,19 +25,37 @@ main()
 	getch();
 }
 
-int *readVector(count)
+int *readVector(int *count)
 {
-	int i;
-	int *result = (int*)malloc(sizeof(int) * count);
-	printf("enter %d elements: \n", count);
-	for (i = 0; i < count; i++)
+	static bSize = 100;
+	char *buffer = (char*)malloc(sizeof(char)*bSize);
+	int i = 0, temp = 0;
+	int *result;
+	printf("enter sequence: ");
+	if (!gets(buffer))
 	{
-		printf("b%d = ", i);
-		scanf("%d", result + i);
+		bSize *= 10;
+		return readVector(count);
 	}
-	return result;
+	*count = 0;
+	while (buffer[i])
+		if (isdigit(buffer[i++]) && !isdigit(buffer[i]))
+			(*count)++;
+	result = (int*)malloc(sizeof(int)*(*count));
+	for (i = 0; buffer[i]; i++)
+		if (isdigit(buffer[i]))
+			temp = temp * 10 + buffer[i] - '0';
+		else if (temp)
+		{
+			*(result++) = temp;
+			temp = 0;
+		}
+	if (temp)
+		*(result++) = temp;
+	bSize = 100;
+	return result - *count;
 }
-int pown(int x, unsigned int n)
+int pown(register int x, register unsigned int n)
 {
 	if (!n)
 		return 1;
