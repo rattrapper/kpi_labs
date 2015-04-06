@@ -27,16 +27,11 @@ main()
 
 int *readVector(int *count)
 {
-	static bSize = 100;
-	char *buffer = (char*)malloc(sizeof(char)*bSize);
+	char *buffer = (char*)malloc(sizeof(char)*1000);
 	int i = 0, temp = 0;
 	int *result;
 	printf("enter sequence: ");
-	if (!gets(buffer))
-	{
-		bSize *= 10;
-		return readVector(count);
-	}
+	gets(buffer);
 	*count = 0;
 	while (buffer[i])
 		if (isdigit(buffer[i++]) && !isdigit(buffer[i]))
@@ -52,7 +47,6 @@ int *readVector(int *count)
 		}
 	if (temp)
 		*(result++) = temp;
-	bSize = 100;
 	return result - *count;
 }
 int pown(register int x, register unsigned int n)
